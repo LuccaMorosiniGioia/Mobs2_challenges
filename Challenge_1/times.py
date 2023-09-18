@@ -1,6 +1,8 @@
 
 teams = [1, 2, 3, 4]
 
+jogos = [[1, 2], [1, 3], [1, 4], [2, 3], [2, 4], [3, 4]]
+
 team_dict = {
     '1': 'A',
     '2': 'B',
@@ -95,6 +97,23 @@ def backtrack(board, line, col, count):
     
     if(ret == True and line == 12): return False
 
+## preenchendo por confrontos
+    for x in jogos:
+        if(count[x[0]-1] <= 6 and count[x[1]-1] <= 6):
+            board[line] = x
+            count[x[0]-1] += 1
+            count[x[1]-1] += 1
+            ret = False  
+            ret = backtrack(board.copy(), line+1, 0, count.copy())
+            count[x[0]-1] -= 1
+            count[x[1]-1] -= 1
+
+            # if(ret == True): return True
+
+    return False
+
+
+## Preenchendo por times    
     for x in teams:
         if(count[x-1] <= 6):
             if(board[line][(col+1)%2] != x):
@@ -103,12 +122,11 @@ def backtrack(board, line, col, count):
                 ret = False
                 if col == 0:
                     ret = backtrack(board.copy(), line, col+1, count.copy())
-                else:
+                else:   
                     ret = backtrack(board.copy(), line+1, 0, count.copy())
                 count[x-1] -= 1
 
-                if(ret == True): return True
-
+                # if(ret == True): return True
 
     return False
 
